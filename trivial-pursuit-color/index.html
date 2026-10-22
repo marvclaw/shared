@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trivial Pursuit Color</title>
+<style>
+  :root {
+    --bg: #f3f2ef;
+    --fg: #1d1d1b;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #1c1c1a; --fg: #f3f2ef; }
+  }
+  :root[data-theme="dark"] { --bg: #1c1c1a; --fg: #f3f2ef; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    transition: background-color .25s ease, color .25s ease;
+  }
+  main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    text-align: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+  main { cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  main:focus-visible { outline: 3px solid currentColor; outline-offset: -8px; }
+  @media (prefers-reduced-motion: reduce) {
+    body { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main role="button" tabindex="0" aria-label="Tap for a random color"></main>
+<script>
+  const colors = [
+    { bg: "#1a73d9", fg: "#ffffff" },
+    { bg: "#f0509f", fg: "#ffffff" },
+    { bg: "#fdd30f", fg: "#1d1d1b" },
+    { bg: "#8a5a2e", fg: "#ffffff" },
+    { bg: "#2faa4f", fg: "#1d1d1b" },
+    { bg: "#f7941d", fg: "#1d1d1b" }
+  ];
+  let last = -1;
+  const root = document.documentElement;
+
+  function pick() {
+    let i;
+    do { i = Math.floor(Math.random() * colors.length); } while (i === last);
+    last = i;
+    const c = colors[i];
+    root.style.setProperty("--bg", c.bg);
+    root.style.setProperty("--fg", c.fg);
+  }
+  const area = document.querySelector("main");
+  area.addEventListener("click", pick);
+  area.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
+  });
+</script>
+</body>
+</html>
