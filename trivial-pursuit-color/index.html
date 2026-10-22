@@ -69,6 +69,24 @@
   area.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
   });
+  pick();
+
+  let wakeLock = null;
+  async function keepAwake() {
+    try {
+      if ("wakeLock" in navigator && !wakeLock) {
+        wakeLock = await navigator.wakeLock.request("screen");
+        wakeLock.addEventListener("release", () => { wakeLock = null; });
+      }
+    } catch (err) {
+      wakeLock = null;
+    }
+  }
+  keepAwake();
+  area.addEventListener("click", keepAwake);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") keepAwake();
+  });
 </script>
 </body>
 </html>
